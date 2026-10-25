@@ -21,8 +21,9 @@ export default function Header({ activeTab, toggleSidebar }) {
     window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Completed consultation for Token #${activePatient.token} (${activePatient.name})`, type: 'success' }}));
   };
 
-  const titles = {
+    const titles = {
     'nurse-vitals': 'Nurse Triage & Patient Vitals Portal',
+    'patient-archives': 'Patient Archives', // <-- Add this
     'rx-pos': 'Prescription Builder (POS)',
     'inventory': 'Master Medicine Catalog'
   };
@@ -37,10 +38,6 @@ export default function Header({ activeTab, toggleSidebar }) {
         </button>
 
         <h2 className="text-base md:text-lg font-bold text-slate-800 tracking-tight">{titles[activeTab]}</h2>
-        <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-medium border border-slate-200">
-          <Calendar className="w-3.5 h-3.5 text-teal-600" />
-          <span>{dateStr}</span>
-        </span>
       </div>
 
       {activeTab === 'rx-pos' && (

@@ -1,8 +1,10 @@
-import { Activity, ClipboardList, Stethoscope, Pill, X } from 'lucide-react';
+import { Activity, ClipboardList, Stethoscope, Pill, X, Users } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }) {
   const navItems = [
     { id: 'nurse-vitals', label: 'Nurse Station', sub: 'Vitals & Patient Entry', icon: ClipboardList, badge: true },
+    // 👇 ADDED PATIENT ARCHIVES HERE
+    { id: 'patient-archives', label: 'Patient Archives', sub: 'View All Patient Records', icon: Users, badge: false },
     { id: 'rx-pos', label: 'Doctor Consultation', sub: 'Prescription Builder (POS)', icon: Stethoscope, badge: false },
     { id: 'inventory', label: 'Medicine Catalog', sub: 'Master Directory', icon: Pill, badge: false },
   ];
@@ -26,7 +28,6 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }) {
               <p className="text-xs text-teal-400 font-medium tracking-wide">CLINIC SYSTEM</p>
             </div>
           </div>
-          {/* Close button inside the drawer for mobile */}
           <button onClick={onClose} className="text-slate-400 hover:text-white p-1">
             <X className="w-5 h-5" />
           </button>
