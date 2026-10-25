@@ -1,0 +1,22 @@
+////////////First Time/////////////////
+
+# 1. Initialize a new git repository
+git init
+
+# 2. Add all your files to the staging area
+git add .
+
+# 3. Create your first commit
+git commit -m "Initial commit: CityCare POS React App"
+
+# 4. Rename the default branch to 'main' (GitHub's default)
+git branch -M main
+
+
+////////////update/////////////////
+
+git add .
+
+git commit -m "v3"
+
+git push origin main
