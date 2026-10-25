@@ -123,9 +123,12 @@ export default function PatientArchives() {
           </span>
         </div>
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+        {/* 🔥 FIXED HEIGHT SCROLLABLE TABLE */}
+        <div className="overflow-x-auto overflow-y-auto" style={{ height: '500px' }}>
+          <table className="w-full text-left text-xs relative">
+            
+            {/* 🔥 STICKY HEADER */}
+            <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 sticky top-0 z-10">
               <tr>
                 <th className="py-3 px-4 text-center w-20">Token</th>
                 <th className="py-3 px-4">Date</th>

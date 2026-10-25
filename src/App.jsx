@@ -6,7 +6,7 @@ import Header from './components/Header';
 import NurseView from './components/NurseView';
 import DoctorView from './components/DoctorView';
 import InventoryView from './components/InventoryView';
-import PatientArchives from './components/PatientArchives'; // <-- 1. Import here
+import PatientArchives from './components/PatientArchives';
 import Modals from './components/Modals';
 
 function MainApp() {
@@ -23,8 +23,11 @@ function MainApp() {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden text-slate-800 flex-col">
-      <div className="flex h-screen overflow-hidden relative">
+    /* 1. OUTER WRAPPER: Allow the browser to scroll this 120vh container */
+    <div className="flex h-[140vh] overflow-y-auto text-slate-800 flex-col">
+      
+      {/* 2. INNER WRAPPER: Fixed to the 120vh height, hides internal side-scroll */}
+      <div className="flex  overflow-hidden relative">
         
         <Sidebar 
           activeTab={activeTab} 
@@ -40,7 +43,8 @@ function MainApp() {
           />
         )}
 
-        <div className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-100 w-full">
+        {/* 3. CONTENT AREA: Fixed 120vh, hides overflow to let the main tags scroll */}
+        <div className="flex-1 flex flex-col h-[140vh]  bg-slate-100 w-full">
           <Header 
             activeTab={activeTab} 
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
@@ -58,7 +62,6 @@ function MainApp() {
             <InventoryView />
           </main>
 
-          {/* 2. Add the new Patient Archives Tab */}
           <main id="view-patient-archives" className={`${activeTab !== 'patient-archives' ? 'hidden' : ''} flex-1 overflow-y-auto p-6 space-y-6`}>
             <PatientArchives />
           </main>
