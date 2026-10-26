@@ -4,12 +4,11 @@ import { store } from './store';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import NurseView from './components/NurseView';
-import DoctorView from './components/DoctorView';
+import DoctorView from './components/doctor/DoctorView'; // Make sure path is correct
 import InventoryView from './components/InventoryView';
 import LabTestsCatalog from './components/LabTestsCatalog';
 import PatientArchives from './components/PatientArchives';
 import Modals from './components/Modals';
-
 
 function MainApp() {
   const [activeTab, setActiveTab] = useState('rx-pos');
@@ -25,11 +24,9 @@ function MainApp() {
   }, []);
 
   return (
-    /* 1. OUTER WRAPPER: Allow the browser to scroll this 120vh container */
     <div className="flex h-[140vh] overflow-y-auto text-slate-800 flex-col">
 
-      {/* 2. INNER WRAPPER: Fixed to the 120vh height, hides internal side-scroll */}
-      <div className="flex  overflow-hidden relative">
+      <div className="flex h-[140vh] overflow-hidden relative">
 
         <Sidebar
           activeTab={activeTab}
@@ -45,8 +42,7 @@ function MainApp() {
           />
         )}
 
-        {/* 3. CONTENT AREA: Fixed 120vh, hides overflow to let the main tags scroll */}
-        <div className="flex-1 flex flex-col h-[140vh]  bg-slate-100 w-full">
+        <div className="flex-1 flex flex-col h-[140vh] bg-slate-100 w-full">
           <Header
             activeTab={activeTab}
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -56,7 +52,8 @@ function MainApp() {
             <NurseView />
           </main>
 
-          <main id="view-rx-pos" className={`${activeTab !== 'rx-pos' ? 'hidden' : ''} flex-1 flex flex-col lg:flex-row overflow-hidden p-4 gap-4`}>
+          {/* 🔥 FIXED: Added h-full here so the inner panels stretch */}
+          <main id="view-rx-pos" className={`${activeTab !== 'rx-pos' ? 'hidden' : ''} flex-1 flex lg:flex-row flex-col p-4 gap-4 h-full overflow-hidden`}>
             <DoctorView />
           </main>
 

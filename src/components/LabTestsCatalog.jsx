@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'; // <-- Add
-import { deleteLabTest } from '../store/clinicSlice'; // <-- Import action
+import { deleteLabTest } from '../store/clinicSlice.js';
 import { Plus, Edit3, Trash2, FlaskConical, Search } from 'lucide-react';
 
 
