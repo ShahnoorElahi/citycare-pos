@@ -28,31 +28,31 @@ const initialState = {
   patientsQueue: [
     {
       id: "CC-9042", token: 101, name: "Rahul Sharma", age: 34, gender: "Male", date: "2026-10-25",
-      bp: "120/80", sugar: 110, pulse: 72, weight: 70, height: 172, temp: 98.6, 
+      bp: "120/80", sugar: 110, pulse: 72, weight: 70, height: 172, temp: 98.6,
       notes: "Mild fever and body pain since 2 days.",
       prescription: [{ id: 1712000001, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals" }]
     },
     {
       id: "CC-9043", token: 102, name: "Anita Desai", age: 45, gender: "Female", date: "2026-10-24",
-      bp: "140/90", sugar: 160, pulse: 78, weight: 65, height: 158, temp: 98.4, 
+      bp: "140/90", sugar: 160, pulse: 78, weight: 65, height: 158, temp: 98.4,
       notes: "Routine checkup for hypertension. Reports occasional dizziness.",
       prescription: [{ id: 1712000002, medId: 2, name: "Amlodipine 5mg", freq: "1-0-0", duration: "30 Days", instructions: "Before Meals" }]
     },
     {
       id: "CC-9044", token: 103, name: "Vikram Singh", age: 29, gender: "Male", date: "2026-10-25",
-      bp: "118/76", sugar: 95, pulse: 85, weight: 82, height: 180, temp: 98.9, 
+      bp: "118/76", sugar: 95, pulse: 85, weight: 82, height: 180, temp: 98.9,
       notes: "Dry cough and sore throat for a week. No difficulty breathing.",
       prescription: [{ id: 1712000003, medId: 3, name: "Cough Syrup (Dextromethorphan)", freq: "1-1-1", duration: "5 Days", instructions: "After Meals" }]
     },
     {
       id: "CC-9045", token: 104, name: "Priya Patel", age: 62, gender: "Female", date: "2026-10-23",
-      bp: "130/82", sugar: 210, pulse: 74, weight: 58, height: 152, temp: 98.2, 
+      bp: "130/82", sugar: 210, pulse: 74, weight: 58, height: 152, temp: 98.2,
       notes: "Elevated fasting blood sugar. Needs adjustments to diabetes management.",
       prescription: [{ id: 1712000004, medId: 4, name: "Metformin 500mg", freq: "1-0-1", duration: "30 Days", instructions: "With Meals" }]
     },
     {
       id: "CC-9046", token: 105, name: "Arjun Mehta", age: 12, gender: "Male", date: "2026-10-25",
-      bp: "105/70", sugar: 90, pulse: 90, weight: 38, height: 145, temp: 101.2, 
+      bp: "105/70", sugar: 90, pulse: 90, weight: 38, height: 145, temp: 101.2,
       notes: "Acute ear pain and high fever since last night.",
       prescription: [{ id: 1712000005, medId: 5, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "7 Days", instructions: "After Meals" }]
     }
@@ -94,11 +94,11 @@ const clinicSlice = createSlice({
       const pt = state.patientsQueue.find(p => p.id === state.activePatientId);
       if (pt) pt.prescription = [];
     },
-    
+
     // --- MEDICINE CRUD ---
     saveMedicine: (state, action) => {
       const { id, ...data } = action.payload;
-      
+
       // Auto-assign categoryBg based on category
       let categoryBg = "bg-slate-100 text-slate-800";
       if (data.category === 'Antibiotic') categoryBg = "bg-amber-100 text-amber-800";
@@ -106,7 +106,7 @@ const clinicSlice = createSlice({
       if (data.category === 'Antacid') categoryBg = "bg-sky-100 text-sky-800";
       if (data.category === 'Antihistamine') categoryBg = "bg-purple-100 text-purple-800";
       if (data.category === 'Vitamins') categoryBg = "bg-emerald-100 text-emerald-800";
-      
+
       // Auto-format dosage string
       const dosage = `${data.freq || '1-0-1'} • ${data.duration || '5 Days'}`;
 
@@ -133,14 +133,64 @@ const clinicSlice = createSlice({
     },
     deleteLabTest: (state, action) => {
       state.labTests = state.labTests.filter(t => t.id !== action.payload);
-    }
+    },
+    addNewVisit: (state, action) => {
+      console.log("🔍 addNewVisit called with ID:", action.payload);
+
+      const oldPatient = state.patientsQueue.find(p => p.id === action.payload);
+      console.log("🔍 Found old patient:", oldPatient?.name, "Date:", oldPatient?.date);
+
+      if (oldPatient) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        console.log("🔍 Today is:", todayStr);
+
+        const alreadyExistsToday = state.patientsQueue.some(
+          p => p.id === oldPatient.id && p.date === todayStr
+        );
+        console.log("🔍 Already exists today?", alreadyExistsToday);
+
+        if (alreadyExistsToday) {
+          const existing = state.patientsQueue.find(p => p.id === oldPatient.id && p.date === todayStr);
+          state.activePatientId = existing.id;
+          return;
+        }
+
+        const newToken = Math.max(...state.patientsQueue.map(p => p.token || 0)) + 1;
+        const newVisit = {
+          id: oldPatient.id,
+          token: newToken,
+          name: oldPatient.name,
+          age: oldPatient.age,
+          gender: oldPatient.gender,
+          date: todayStr,
+          bp: '', sugar: '', pulse: '', weight: '', height: '', temp: '', notes: '',
+          prescription: []
+        };
+
+        console.log("✅ Creating new visit:", newVisit);
+        state.patientsQueue.unshift(newVisit);
+        state.activePatientId = newVisit.id;
+      } else {
+        console.log("❌ No old patient found with ID:", action.payload);
+      }
+    },
+    markAsSentToDoctor: (state, action) => {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const record = state.patientsQueue.find(
+        (pt) => pt.id === action.payload && pt.date === todayStr
+      );
+
+      if (record) {
+        record.status = 'with-doctor';
+      }
+    },
   },
 });
 
 export const {
   saveVitals, setActivePatient, addToSlip, removeFromSlip,
   updateSlipItem, clearPrescription, saveMedicine, deleteMedicine,
-  saveLabTest, deleteLabTest
+  saveLabTest, deleteLabTest, addNewVisit, markAsSentToDoctor
 } = clinicSlice.actions;
 
 export default clinicSlice.reducer;
