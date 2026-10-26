@@ -7,7 +7,7 @@ export default function Header({ activeTab, toggleSidebar }) {
 
   const handlePrint = () => {
     if (!activePatient || activePatient.prescription.length === 0) {
-      window.dispatchEvent(new CustomEvent('showToast', { detail: { message: 'Add at least one drug to slip before printing', type: 'info' }}));
+      window.dispatchEvent(new CustomEvent('showToast', { detail: { message: 'Add at least one drug to slip before printing', type: 'info' } }));
       return;
     }
     window.dispatchEvent(new CustomEvent('openPrintModal'));
@@ -15,23 +15,24 @@ export default function Header({ activeTab, toggleSidebar }) {
 
   const handleComplete = () => {
     if (!activePatient || activePatient.prescription.length === 0) {
-      window.dispatchEvent(new CustomEvent('showToast', { detail: { message: 'Add medications before completing visit', type: 'info' }}));
+      window.dispatchEvent(new CustomEvent('showToast', { detail: { message: 'Add medications before completing visit', type: 'info' } }));
       return;
     }
-    window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Completed consultation for Token #${activePatient.token} (${activePatient.name})`, type: 'success' }}));
+    window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Completed consultation for Token #${activePatient.token} (${activePatient.name})`, type: 'success' } }));
   };
 
-    const titles = {
+  const titles = {
     'nurse-vitals': 'Nurse Triage & Patient Vitals Portal',
-    'patient-archives': 'Patient Archives', // <-- Add this
+    'patient-archives': 'Patient Archives',
     'rx-pos': 'Prescription Builder (POS)',
-    'inventory': 'Master Medicine Catalog'
+    'inventory': 'Master Medicine Catalog',
+    'lab-tests': 'Master Lab Tests Catalog' // <-- Add this
   };
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between shrink-0 shadow-sm z-10">
       <div className="flex items-center gap-3 md:gap-4">
-        
+
         {/* Hamburger Menu Button to open the Drawer */}
         <button onClick={toggleSidebar} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors">
           <Menu className="w-5 h-5" />

@@ -11,7 +11,21 @@ const initialState = {
     { id: 7, image: "https://images.unsplash.com/photo-1577401239170-897942555fb3?w=500&auto=format&fit=crop&q=80", name: "Multivitamin Plus", formula: "Essential Vitamins & Minerals", form: "Tablet", category: "Vitamins", categoryBg: "bg-emerald-100 text-emerald-800", dosage: "0-1-0 • 30 Days", freq: "0-1-0", duration: "30 Days", instructions: "After Lunch" },
     { id: 8, image: "https://images.unsplash.com/photo-1585435557343-3b092031a831?w=500&auto=format&fit=crop&q=80", name: "Pantoprazole 40mg", formula: "Pantoprazole Sodium", form: "Tablet", category: "Antacid", categoryBg: "bg-sky-100 text-sky-800", dosage: "1-0-0 • 10 Days", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach" }
   ],
-    patientsQueue: [
+
+  // 🔥 ADDED LAB TESTS HERE
+  labTests: [
+    { id: 901, name: 'Complete Blood Count (CBC)', category: 'Hematology', price: '$25', sample: 'Blood', desc: 'Measures RBCs, WBCs, and platelets.' },
+    { id: 902, name: 'Lipid Profile', category: 'Biochemistry', price: '$40', sample: 'Blood', desc: 'Cholesterol, Triglycerides, HDL, LDL.' },
+    { id: 903, name: 'Liver Function Test (LFT)', category: 'Biochemistry', price: '$35', sample: 'Blood', desc: 'Evaluates liver enzymes and proteins.' },
+    { id: 904, name: 'Kidney Function Test (KFT)', category: 'Biochemistry', price: '$30', sample: 'Blood', desc: 'Urea, Creatinine, and electrolytes.' },
+    { id: 905, name: 'Thyroid Profile (T3, T4, TSH)', category: 'Endocrinology', price: '$50', sample: 'Blood', desc: 'Checks thyroid hormone levels.' },
+    { id: 906, name: 'Urine Routine & Microscopy', category: 'Pathology', price: '$15', sample: 'Urine', desc: 'Screens for infections or kidney issues.' },
+    { id: 907, name: 'Chest X-Ray (PA View)', category: 'Radiology', price: '$60', sample: 'N/A', desc: 'Evaluates lungs and heart size.' },
+    { id: 908, name: 'ECG / EKG', category: 'Cardiology', price: '$45', sample: 'N/A', desc: 'Records the electrical activity of the heart.' },
+    { id: 909, name: 'HbA1c (Glycated Hemoglobin)', category: 'Biochemistry', price: '$55', sample: 'Blood', desc: 'Average blood sugar over 3 months.' },
+  ],
+
+  patientsQueue: [
     {
       id: "CC-9042", token: 101, name: "Rahul Sharma", age: 34, gender: "Male", date: "2026-10-25",
       bp: "120/80", sugar: 110, pulse: 72, weight: 70, height: 172, temp: 98.6, 
@@ -50,7 +64,6 @@ const clinicSlice = createSlice({
   name: 'clinic',
   initialState,
   reducers: {
-    // ... (Keep existing saveVitals, setActivePatient, addToSlip, etc.)
     saveVitals: (state, action) => {
       const { internalId, ...data } = action.payload;
       if (internalId) {
@@ -82,7 +95,7 @@ const clinicSlice = createSlice({
       if (pt) pt.prescription = [];
     },
     
-    // --- UPDATED MEDICINE CRUD ---
+    // --- MEDICINE CRUD ---
     saveMedicine: (state, action) => {
       const { id, ...data } = action.payload;
       
@@ -106,13 +119,28 @@ const clinicSlice = createSlice({
     },
     deleteMedicine: (state, action) => {
       state.medicines = state.medicines.filter(m => m.id !== action.payload);
+    },
+
+    // 🔥 LAB TEST CRUD
+    saveLabTest: (state, action) => {
+      const { id, ...data } = action.payload;
+      if (id) {
+        const test = state.labTests.find(t => t.id === id);
+        if (test) Object.assign(test, data);
+      } else {
+        state.labTests.unshift({ ...data, id: Date.now() });
+      }
+    },
+    deleteLabTest: (state, action) => {
+      state.labTests = state.labTests.filter(t => t.id !== action.payload);
     }
   },
 });
 
 export const {
   saveVitals, setActivePatient, addToSlip, removeFromSlip,
-  updateSlipItem, clearPrescription, saveMedicine, deleteMedicine
+  updateSlipItem, clearPrescription, saveMedicine, deleteMedicine,
+  saveLabTest, deleteLabTest
 } = clinicSlice.actions;
 
 export default clinicSlice.reducer;

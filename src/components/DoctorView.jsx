@@ -1,21 +1,24 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Search, X, PackageOpen, Check, Plus, Users, Receipt, Trash2, FilePlus, Printer, Image as ImageIcon } from 'lucide-react';
+import { Search, X, PackageOpen, Check, Plus, Users, Receipt, Trash2, FilePlus, Printer, Image as ImageIcon, Activity, FlaskConical } from 'lucide-react';
 import { addToSlip, removeFromSlip, updateSlipItem, clearPrescription, setActivePatient } from '../store/clinicSlice';
 
 export default function DoctorView() {
   const dispatch = useDispatch();
-  const { medicines, patientsQueue, activePatientId } = useSelector(state => state.clinic);
+  const { medicines, labTests, patientsQueue, activePatientId } = useSelector(state => state.clinic);
   const activePatient = patientsQueue.find(p => p.id === activePatientId);
-  
+
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-  
+  const [activeTab, setActiveTab] = useState('medicines'); // 'medicines' or 'tests'
+
   // 🔥 State for the Hover Image Preview
   const [hoverImage, setHoverImage] = useState(null);
 
   const categories = ['All', 'Antibiotic', 'Analgesic', 'Antacid', 'Antihistamine', 'Vitamins'];
 
+
+  // Filter Medicines
   const filteredMeds = medicines.filter(m => {
     const matchesCat = activeCategory === 'All' || m.category === activeCategory;
     const query = search.toLowerCase();
@@ -24,8 +27,16 @@ export default function DoctorView() {
     return matchesCat && (safeName.includes(query) || safeGeneric.includes(query));
   });
 
+  // Filter Tests
+  const filteredTests = labTests.filter(t => {
+    const query = search.toLowerCase();
+    const safeName = (t.name || '').toLowerCase();
+    const safeCat = (t.category || '').toLowerCase();
+    return safeName.includes(query) || safeCat.includes(query);
+  });
+
   const getCategoryBadge = (cat) => {
-    switch(cat) {
+    switch (cat) {
       case 'Antibiotic': return 'bg-amber-100 text-amber-800';
       case 'Analgesic': return 'bg-rose-100 text-rose-800';
       case 'Antacid': return 'bg-sky-100 text-sky-800';
@@ -37,15 +48,32 @@ export default function DoctorView() {
   return (
     <>
       <section className="flex-1 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col overflow-hidden">
+
+        {/* 🔥 TOGGLE TABS */}
+        <div className="flex border-b border-slate-200 bg-slate-50">
+          <button
+            onClick={() => { setActiveTab('medicines'); setSearch(''); }}
+            className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'medicines' ? 'bg-white text-teal-700 border-b-2 border-teal-600' : 'text-slate-500 hover:bg-slate-100'}`}
+          >
+            <Activity className="w-4 h-4" /> Medicine Catalog
+          </button>
+          <button
+            onClick={() => { setActiveTab('tests'); setSearch(''); }}
+            className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'tests' ? 'bg-white text-teal-700 border-b-2 border-teal-600' : 'text-slate-500 hover:bg-slate-100'}`}
+          >
+            <FlaskConical className="w-4 h-4" /> Lab Tests / Diagnostics
+          </button>
+        </div>
+
         <div className="p-4 border-b border-slate-100 space-y-3 bg-slate-50/50">
           <div className="relative">
             <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input 
-              type="text" 
-              value={search} 
+            <input
+              type="text"
+              value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search medicine by brand or generic formula..." 
-              className="w-full pl-11 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm" 
+              placeholder={activeTab === 'medicines' ? "Search medicine by brand or generic formula..." : "Search tests by name or category..."}
+              className="w-full pl-11 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
@@ -53,30 +81,33 @@ export default function DoctorView() {
               </button>
             )}
           </div>
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            {categories.map(cat => (
-              <button 
-                key={cat} 
-                onClick={() => setActiveCategory(cat)} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${
-                  activeCategory === cat ? 'bg-teal-600 text-white' : 'bg-slate-200/70 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {cat === 'All' ? 'All Medicines' : cat}
-              </button>
-            ))}
-          </div>
+
+          {/* Show Categories only if on Medicines tab */}
+          {activeTab === 'medicines' && (
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${activeCategory === cat ? 'bg-teal-600 text-white' : 'bg-slate-200/70 text-slate-600 hover:bg-slate-200'
+                    }`}
+                >
+                  {cat === 'All' ? 'All Medicines' : cat}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid gap-3">
-            {filteredMeds.map(med => {
+
+            {/* MEDICINES LIST */}
+            {activeTab === 'medicines' && filteredMeds.map(med => {
               const isAdded = activePatient?.prescription?.some(i => i.medId === med.id);
               return (
                 <div key={med.id} className={`p-3 rounded-xl border transition-all flex items-center gap-3 ${isAdded ? 'bg-teal-50/60 border-teal-300 shadow-sm' : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'}`}>
-                  
-                  {/* 🔥 Medicine Image with Hover Effect */}
-                  <div 
+                  <div
                     className="w-14 h-14 shrink-0 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-teal-500 transition-all group relative"
                     onMouseEnter={() => setHoverImage(med)}
                     onMouseLeave={() => setHoverImage(null)}
@@ -88,7 +119,6 @@ export default function DoctorView() {
                     )}
                   </div>
 
-                  {/* Medicine Details */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between h-full space-y-1.5">
                     <div>
                       <div className="flex items-start justify-between gap-1 mb-0.5">
@@ -97,19 +127,17 @@ export default function DoctorView() {
                       </div>
                       <p className="text-[10px] text-slate-500 truncate">{med.generic || med.formula}</p>
                     </div>
-                    
+
                     <div className="flex items-center justify-between text-[10px] pt-1.5 border-t border-slate-100/80">
                       <span className="text-slate-500 font-medium">{med.form} • {med.freq}</span>
                       {isAdded ? (
-                        <span className="text-teal-700 font-bold text-[10px] flex items-center gap-1 bg-teal-100 px-1.5 py-0.5 rounded">
-                          <Check className="w-3 h-3" /> Added
-                        </span>
+                        <span className="text-teal-700 font-bold text-[10px] flex items-center gap-1 bg-teal-100 px-1.5 py-0.5 rounded"><Check className="w-3 h-3" /> Added</span>
                       ) : (
-                        <button 
-                          onClick={() => { 
-                            dispatch(addToSlip({ id: Date.now(), medId: med.id, name: med.name, freq: med.freq, duration: med.duration, instructions: med.instructions })); 
-                            window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Added ${med.name}`, type: 'success' }})); 
-                          }} 
+                        <button
+                          onClick={() => {
+                            dispatch(addToSlip({ id: Date.now(), medId: med.id, name: med.name, freq: med.freq, duration: med.duration, instructions: med.instructions }));
+                            window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Added ${med.name}`, type: 'success' } }));
+                          }}
                           className="bg-slate-100 hover:bg-teal-600 hover:text-white text-slate-700 font-semibold px-2 py-0.5 rounded transition-all flex items-center gap-1"
                         >
                           <Plus className="w-3 h-3" /> Add
@@ -117,17 +145,63 @@ export default function DoctorView() {
                       )}
                     </div>
                   </div>
+                </div>
+              );
+            })}
 
+            {/* 🔥 LAB TESTS LIST */}
+            {activeTab === 'tests' && filteredTests.map(test => {
+              const isAdded = activePatient?.prescription?.some(i => i.medId === test.id);
+              return (
+                <div key={test.id} className={`p-3 rounded-xl border transition-all flex items-center gap-3 ${isAdded ? 'bg-teal-50/60 border-teal-300 shadow-sm' : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'}`}>
+                  {/* Test Icon */}
+                  <div className="w-14 h-14 shrink-0 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600">
+                    <FlaskConical className="w-6 h-6" />
+                  </div>
+
+                  {/* Test Details */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between h-full space-y-1.5">
+                    <div>
+                      <div className="flex items-start justify-between gap-1 mb-0.5">
+                        <span className="font-bold text-xs text-slate-800 leading-tight truncate">{test.name}</span>
+                        <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase shrink-0 bg-slate-100 text-slate-600">{test.category}</span>
+                      </div>
+                      <p className="text-[10px] text-slate-500 truncate">{test.description}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] pt-1.5 border-t border-slate-100/80">
+                      <span className="text-slate-500 font-medium">Diagnostic Test</span>
+                      {isAdded ? (
+                        <span className="text-teal-700 font-bold text-[10px] flex items-center gap-1 bg-teal-100 px-1.5 py-0.5 rounded"><Check className="w-3 h-3" /> Ordered</span>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            dispatch(addToSlip({ id: Date.now(), medId: test.id, name: test.name, freq: 'Once', duration: '1 Day', instructions: 'Lab Test' }));
+                            window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Ordered ${test.name}`, type: 'success' } }));
+                          }}
+                          className="bg-slate-100 hover:bg-teal-600 hover:text-white text-slate-700 font-semibold px-2 py-0.5 rounded transition-all flex items-center gap-1"
+                        >
+                          <Plus className="w-3 h-3" /> Order
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               );
             })}
           </div>
-          
-          {filteredMeds.length === 0 && (
+
+          {/* Empty States */}
+          {activeTab === 'medicines' && filteredMeds.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-slate-400">
               <PackageOpen className="w-12 h-12 stroke-1 mb-2" />
               <p className="text-sm font-medium">No medicines match your search filter.</p>
-              <p className="text-xs text-slate-400 mt-1">Try searching for a different name or category.</p>
+            </div>
+          )}
+          {activeTab === 'tests' && filteredTests.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+              <FlaskConical className="w-12 h-12 stroke-1 mb-2" />
+              <p className="text-sm font-medium">No lab tests match your search.</p>
             </div>
           )}
         </div>
@@ -140,9 +214,9 @@ export default function DoctorView() {
             <Users className="w-4 h-4 text-teal-400" />
             <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Active Patient Queue</span>
           </div>
-          <select 
-            value={activePatientId} 
-            onChange={e => dispatch(setActivePatient(e.target.value))} 
+          <select
+            value={activePatientId}
+            onChange={e => dispatch(setActivePatient(e.target.value))}
             className="bg-slate-800 text-teal-300 font-bold text-xs p-1.5 rounded-lg border border-slate-700 focus:outline-none max-w-[200px]"
           >
             {patientsQueue.map(pt => <option key={pt.id} value={pt.id}>Token #{pt.token} - {pt.name}</option>)}
@@ -167,7 +241,7 @@ export default function DoctorView() {
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Ready
                 </span>
               </div>
-              
+
               <div className="grid grid-cols-5 gap-2 pt-2 border-t border-slate-800 text-xs">
                 {[
                   { label: 'BP', val: activePatient.bp, unit: 'mmHg', color: 'text-teal-300' },
@@ -192,7 +266,7 @@ export default function DoctorView() {
         </div>
 
         <div className="px-4 py-2.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between text-xs font-semibold text-slate-600">
-          <span className="flex items-center gap-1.5"><Receipt className="w-4 h-4 text-teal-600" /> PRESCRIBED MEDICATIONS</span>
+          <span className="flex items-center gap-1.5"><Receipt className="w-4 h-4 text-teal-600" /> PRESCRIBED MEDICATIONS & TESTS</span>
           <span className="bg-teal-100 text-teal-800 px-2 py-0.5 rounded-full text-[11px] font-bold">{activePatient?.prescription?.length || 0} items</span>
         </div>
 
@@ -200,35 +274,65 @@ export default function DoctorView() {
           {activePatient?.prescription?.length === 0 ? (
             <div className="h-44 flex flex-col items-center justify-center text-slate-400 space-y-2 border-2 border-dashed border-slate-200 rounded-xl p-4 text-center">
               <FilePlus className="w-8 h-8 stroke-1" />
-              <p className="text-xs font-semibold">No medicines prescribed.</p>
+              <p className="text-xs font-semibold">No medicines or tests ordered.</p>
             </div>
-          ) : activePatient?.prescription?.map((item, index) => (
-            <div key={item.id} className="p-3 bg-white border border-slate-200 rounded-xl shadow-sm space-y-2 group hover:border-teal-300 transition-all">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-[10px] shrink-0">{index + 1}</span>
-                  <h4 className="font-bold text-xs text-slate-800">{item.name}</h4>
+          ) : activePatient?.prescription?.map((item, index) => {
+
+            // 🔥 CHECK IF THE ITEM IS A LAB TEST
+            const isLabTest = item.instructions === 'Lab Test';
+
+            return (
+              <div key={item.id} className="p-3 bg-white border border-slate-200 rounded-xl shadow-sm space-y-2 group hover:border-teal-300 transition-all">
+
+                {/* Item Header (Number and Name) */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] shrink-0 ${isLabTest ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
+                      {index + 1}
+                    </span>
+                    <h4 className="font-bold text-xs text-slate-800">{item.name}</h4>
+                  </div>
+                  <button onClick={() => dispatch(removeFromSlip(item.id))} className="text-slate-400 hover:text-rose-600 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
-                <button onClick={() => dispatch(removeFromSlip(item.id))} className="text-slate-400 hover:text-rose-600 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
+
+                {/* 🔥 CONDITIONAL RENDERING: Different UI for Tests vs Medicines */}
+                {isLabTest ? (
+
+                  /* LAB TEST UI */
+                  <div className="flex items-center justify-between bg-amber-50/50 border border-amber-100 rounded-lg p-2 mt-1">
+                    <div className="flex items-center gap-2 text-amber-700">
+                      <FlaskConical className="w-4 h-4" />
+                      <span className="text-[11px] font-semibold">Diagnostic Test</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">
+                      {item.status || 'Pending'}
+                    </span>
+                  </div>
+
+                ) : (
+
+                  /* MEDICINE UI (Original) */
+                  <div className="grid grid-cols-3 gap-2 pt-1 text-[11px]">
+                    <div>
+                      <span className="text-[9px] text-slate-400 block font-medium">Frequency</span>
+                      <select value={item.freq} onChange={e => dispatch(updateSlipItem({ id: item.id, field: 'freq', value: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded p-1 font-semibold text-slate-700 focus:ring-1 focus:ring-teal-500">
+                        {['1-0-1', '1-1-1', '1-0-0', '0-0-1', 'SOS'].map(f => <option key={f} value={f}>{f}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-slate-400 block font-medium">Duration</span>
+                      <input type="text" value={item.duration} onChange={e => dispatch(updateSlipItem({ id: item.id, field: 'duration', value: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded p-1 font-semibold text-slate-700 focus:ring-1 focus:ring-teal-500" />
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-slate-400 block font-medium">Instructions</span>
+                      <input type="text" value={item.instructions} onChange={e => dispatch(updateSlipItem({ id: item.id, field: 'instructions', value: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded p-1 font-semibold text-slate-700 focus:ring-1 focus:ring-teal-500" />
+                    </div>
+                  </div>
+
+                )}
               </div>
-              <div className="grid grid-cols-3 gap-2 pt-1 text-[11px]">
-                <div>
-                  <span className="text-[9px] text-slate-400 block font-medium">Frequency</span>
-                  <select value={item.freq} onChange={e => dispatch(updateSlipItem({ id: item.id, field: 'freq', value: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded p-1 font-semibold text-slate-700 focus:ring-1 focus:ring-teal-500">
-                    {['1-0-1', '1-1-1', '1-0-0', '0-0-1', 'SOS'].map(f => <option key={f} value={f}>{f}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <span className="text-[9px] text-slate-400 block font-medium">Duration</span>
-                  <input type="text" value={item.duration} onChange={e => dispatch(updateSlipItem({ id: item.id, field: 'duration', value: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded p-1 font-semibold text-slate-700 focus:ring-1 focus:ring-teal-500" />
-                </div>
-                <div>
-                  <span className="text-[9px] text-slate-400 block font-medium">Instructions</span>
-                  <input type="text" value={item.instructions} onChange={e => dispatch(updateSlipItem({ id: item.id, field: 'instructions', value: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded p-1 font-semibold text-slate-700 focus:ring-1 focus:ring-teal-500" />
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
