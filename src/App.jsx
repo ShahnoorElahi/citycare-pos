@@ -9,6 +9,7 @@ import InventoryView from './components/InventoryView';
 import LabTestsCatalog from './components/LabTestsCatalog';
 import PatientArchives from './components/PatientArchives';
 import Modals from './components/Modals';
+import PrescriptionTable from './components/medicines/PrescriptionTable';
 
 function MainApp() {
   const [activeTab, setActiveTab] = useState('rx-pos');
@@ -54,7 +55,8 @@ function MainApp() {
 
           {/* 🔥 FIXED: Added h-full here so the inner panels stretch */}
           <main id="view-rx-pos" className={`${activeTab !== 'rx-pos' ? 'hidden' : ''} flex-1 flex lg:flex-row flex-col p-4 gap-4 h-full overflow-hidden`}>
-            <DoctorView />
+            {/* <DoctorView /> */}
+            <PrescriptionTable/>
           </main>
 
           <main id="view-inventory" className={`${activeTab !== 'inventory' ? 'hidden' : ''} flex-1 overflow-y-auto p-6 space-y-6`}>
