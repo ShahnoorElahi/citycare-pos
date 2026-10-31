@@ -55,6 +55,54 @@ const initialState = {
       bp: "105/70", sugar: 90, pulse: 90, weight: 38, height: 145, temp: 101.2,
       notes: "Acute ear pain and high fever since last night.",
       prescription: [{ id: 1712000005, medId: 5, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "7 Days", instructions: "After Meals" }]
+    },
+    {
+      id: "CC-9047", token: 102, name: "Anita Desai", age: 45, gender: "Female", date: "2026-10-24",
+      bp: "140/90", sugar: 160, pulse: 78, weight: 65, height: 158, temp: 98.4,
+      notes: "Routine checkup for hypertension. Reports occasional dizziness.",
+      prescription: [{ id: 1712000002, medId: 2, name: "Amlodipine 5mg", freq: "1-0-0", duration: "30 Days", instructions: "Before Meals" }]
+    },
+    {
+      id: "CC-9048", token: 103, name: "Vikram Singh", age: 29, gender: "Male", date: "2026-10-25",
+      bp: "118/76", sugar: 95, pulse: 85, weight: 82, height: 180, temp: 98.9,
+      notes: "Dry cough and sore throat for a week. No difficulty breathing.",
+      prescription: [{ id: 1712000003, medId: 3, name: "Cough Syrup (Dextromethorphan)", freq: "1-1-1", duration: "5 Days", instructions: "After Meals" }]
+    },
+    {
+      id: "CC-9049", token: 104, name: "Priya Patel", age: 62, gender: "Female", date: "2026-10-23",
+      bp: "130/82", sugar: 210, pulse: 74, weight: 58, height: 152, temp: 98.2,
+      notes: "Elevated fasting blood sugar. Needs adjustments to diabetes management.",
+      prescription: [{ id: 1712000004, medId: 4, name: "Metformin 500mg", freq: "1-0-1", duration: "30 Days", instructions: "With Meals" }]
+    },
+    {
+      id: "CC-9050", token: 105, name: "Arjun Mehta", age: 12, gender: "Male", date: "2026-10-25",
+      bp: "105/70", sugar: 90, pulse: 90, weight: 38, height: 145, temp: 101.2,
+      notes: "Acute ear pain and high fever since last night.",
+      prescription: [{ id: 1712000005, medId: 5, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "7 Days", instructions: "After Meals" }]
+    },
+    {
+      id: "CC-9051", token: 102, name: "Anita Desai", age: 45, gender: "Female", date: "2026-10-24",
+      bp: "140/90", sugar: 160, pulse: 78, weight: 65, height: 158, temp: 98.4,
+      notes: "Routine checkup for hypertension. Reports occasional dizziness.",
+      prescription: [{ id: 1712000002, medId: 2, name: "Amlodipine 5mg", freq: "1-0-0", duration: "30 Days", instructions: "Before Meals" }]
+    },
+    {
+      id: "CC-9052", token: 103, name: "Vikram Singh", age: 29, gender: "Male", date: "2026-10-25",
+      bp: "118/76", sugar: 95, pulse: 85, weight: 82, height: 180, temp: 98.9,
+      notes: "Dry cough and sore throat for a week. No difficulty breathing.",
+      prescription: [{ id: 1712000003, medId: 3, name: "Cough Syrup (Dextromethorphan)", freq: "1-1-1", duration: "5 Days", instructions: "After Meals" }]
+    },
+    {
+      id: "CC-9053", token: 104, name: "Priya Patel", age: 62, gender: "Female", date: "2026-10-23",
+      bp: "130/82", sugar: 210, pulse: 74, weight: 58, height: 152, temp: 98.2,
+      notes: "Elevated fasting blood sugar. Needs adjustments to diabetes management.",
+      prescription: [{ id: 1712000004, medId: 4, name: "Metformin 500mg", freq: "1-0-1", duration: "30 Days", instructions: "With Meals" }]
+    },
+    {
+      id: "CC-9054", token: 105, name: "Arjun Mehta", age: 12, gender: "Male", date: "2026-10-25",
+      bp: "105/70", sugar: 90, pulse: 90, weight: 38, height: 145, temp: 101.2,
+      notes: "Acute ear pain and high fever since last night.",
+      prescription: [{ id: 1712000005, medId: 5, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "7 Days", instructions: "After Meals" }]
     }
   ],
   activePatientId: 'CC-9042',

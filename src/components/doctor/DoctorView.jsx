@@ -9,7 +9,7 @@ export default function DoctorView() {
 
   return (
     <>
-      <section className="flex-1 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col overflow-hidden">
+      <section className="flex-1 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-[120vh] overflow-y-scroll">
         {/* Toggle Tabs */}
         <div className="flex border-b border-slate-200 bg-slate-50 shrink-0">
           <button

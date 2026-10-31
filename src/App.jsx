@@ -25,9 +25,9 @@ function MainApp() {
   }, []);
 
   return (
-    <div className="flex h-[140vh] overflow-y-auto text-slate-800 flex-col">
+    <div className="flex x-140vh overflow-y-auto text-slate-800 flex-col">
 
-      <div className="flex h-[140vh] overflow-hidden relative">
+      <div className="flex x-140vh overflow-hidden relative">
 
         <Sidebar
           activeTab={activeTab}
@@ -43,7 +43,7 @@ function MainApp() {
           />
         )}
 
-        <div className="flex-1 flex flex-col h-[140vh] bg-slate-100 w-full">
+        <div className="flex-1 flex flex-col x-140vh bg-slate-100 w-full">
           <Header
             activeTab={activeTab}
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -55,9 +55,10 @@ function MainApp() {
 
           {/* 🔥 FIXED: Added h-full here so the inner panels stretch */}
           <main id="view-rx-pos" className={`${activeTab !== 'rx-pos' ? 'hidden' : ''} flex-1 flex lg:flex-row flex-col p-4 gap-4 h-full overflow-hidden`}>
-            {/* <DoctorView /> */}
-            <PrescriptionTable/>
+            <DoctorView />
+            {/* <PrescriptionTable/> */}
           </main>
+
 
           <main id="view-inventory" className={`${activeTab !== 'inventory' ? 'hidden' : ''} flex-1 overflow-y-auto p-6 space-y-6`}>
             <InventoryView />
@@ -67,7 +68,7 @@ function MainApp() {
             <LabTestsCatalog />
           </main>
 
-          <main id="view-patient-archives" className={`${activeTab !== 'patient-archives' ? 'hidden' : ''} flex-1 overflow-y-auto p-6 space-y-6`}>
+          <main id="view-patient-archives" className={`${activeTab !== 'patient-archives' ? 'hidden' : ''} flex-1  p-6 space-y-6`}>
             <PatientArchives />
           </main>
 
