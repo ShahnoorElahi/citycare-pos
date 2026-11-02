@@ -5,10 +5,10 @@ import { Calendar, Link as LinkIcon, ChevronDown, MoreVertical } from 'lucide-re
 // Helper for pill form colors
 const getFormBadgeColor = (form) => {
   switch (form?.toLowerCase()) {
-    case 'tablet': return 'bg-[#D1FAE5] text-[#059669]'; 
-    case 'capsule': return 'bg-[#FEF3C7] text-[#D97706]'; 
-    case 'syrup': return 'bg-[#F3E8FF] text-[#9333EA]'; 
-    default: return 'bg-slate-100 text-slate-600'; 
+    case 'tablet': return 'bg-[#D1FAE5] text-[#059669]';
+    case 'capsule': return 'bg-[#FEF3C7] text-[#D97706]';
+    case 'syrup': return 'bg-[#F3E8FF] text-[#9333EA]';
+    default: return 'bg-slate-100 text-slate-600';
   }
 };
 
@@ -43,14 +43,15 @@ export default function PrescriptionView(prop) {
 
   const getMedicineForm = (medId, medName) => {
     const med = medicines.find(m => m.id === medId) || medicines.find(m => m.name === medName);
-    return med ? med.form : "Tablet"; 
+    return med ? med.form : "Tablet";
   };
+
 
   return (
     <main className="flex-1 flex lg:flex-row flex-col p-4 gap-4 h-full overflow-hidden bg-slate-50" id="view-rx-pos">
       <div className="w-full min-h-screen bg-white p-8 font-sans flex justify-center items-start overflow-y-auto">
         <div className="w-full max-w-[1200px] border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-          
+
           <div className="grid grid-cols-[2fr_6fr] bg-[#F8FAFC] border-b border-gray-200 px-6 py-4 text-[#475569] font-semibold text-[13px] sticky top-0 z-10">
             <div>Date & Visit Details</div>
             <div className={`grid ${dataGridCols} pl-4`}>
@@ -72,8 +73,8 @@ export default function PrescriptionView(prop) {
               if (!patient.prescription || patient.prescription.length === 0) return null;
 
               return (
-                <div 
-                  key={`${patient.id}-${patient.date}-${patientIndex}`} 
+                <div
+                  key={`${patient.id}-${patient.date}-${patientIndex}`}
                   className={`grid grid-cols-[2fr_6fr] ${patientIndex !== patientsQueue.length - 1 ? 'border-b-[6px] border-slate-100' : ''}`}
                 >
                   <div className="p-6 border-r border-gray-200">
@@ -106,9 +107,10 @@ export default function PrescriptionView(prop) {
                       const badgeColor = getFormBadgeColor(form);
                       const status = item.status || "Active";
                       const statusColor = getStatusBadge(status);
+                      const isLabTest = item.instructions === 'Lab Test';
 
                       return (
-                        <div 
+                        <div
                           key={item.id || medIndex}
                           className={`grid ${dataGridCols} items-center px-4 py-4
                             ${medIndex !== patient.prescription.length - 1 ? 'border-b border-gray-100' : ''} 
@@ -122,16 +124,26 @@ export default function PrescriptionView(prop) {
                             </span>
                           </div>
 
-                          <div className="text-center text-[#475569] text-[14px]">{item.freq}</div>
-                          <div className="text-center text-[#475569] text-[14px]">{item.duration}</div>
+                          {/* Hide freq & duration for lab tests */}
+                          {!isLabTest ? (
+                            <>
+                              <div className="text-center text-[#475569] text-[14px]">{item.freq}</div>
+                              <div className="text-center text-[#475569] text-[14px]">{item.duration}</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="text-center text-slate-400 text-[14px]">—</div>
+                              <div className="text-center text-slate-400 text-[14px]">—</div>
+                            </>
+                          )}
                           <div className="text-center text-[#475569] text-[14px]">{item.instructions}</div>
-                          
+
                           <div className="flex justify-center">
                             <span className={`text-[12px] font-medium px-3 py-1 rounded-full w-max ${statusColor}`}>
                               {status}
                             </span>
                           </div>
-                          
+
                           <div className="flex justify-end pr-2">
                             <MoreVertical size={18} className="text-slate-400 cursor-pointer hover:text-slate-600" />
                           </div>
