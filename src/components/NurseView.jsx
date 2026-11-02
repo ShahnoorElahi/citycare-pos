@@ -366,7 +366,9 @@ export default function NurseView() {
           </div>
 
           <div className="flex-1 overflow-y-auto p-3 space-y-3">
-            {filteredQueue.length === 0 ? (
+            {
+            console.log(filteredQueue) &&
+            filteredQueue.length === 0 ? (
                <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2 border-2 border-dashed border-slate-200 rounded-xl p-4 text-center">
                  <UserCheck className="w-10 h-10 stroke-1" />
                  <p className="text-xs font-semibold">No patients found.</p>

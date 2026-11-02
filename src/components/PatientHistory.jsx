@@ -1,21 +1,58 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Eye, X, UserCheck, FileText, Activity, Stethoscope } from 'lucide-react';
+import { Eye, X, FileText, Activity } from 'lucide-react';
 import { setActivePatient } from '../store/clinicSlice';
 import PrescriptionTable from './medicines/PrescriptionTable';
 
-// 🔥 Change prop to accept patientId
 export default function PatientHistory({ patientId, patientName, onClose }) {
   const dispatch = useDispatch();
   const allPatients = useSelector(state => state.clinic.patientsQueue);
 
-  // 🔥 Filter by ID (This is the unique identifier that stays the same)
   const patientRecords = allPatients.filter(p => p.id === patientId);
 
   // Sort newest first
   const sortedRecords = [...patientRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  const [viewingRecord, setViewingRecord] = useState(sortedRecords[0] || null);
+  // 🔥 CALCULATE DYNAMIC STATUSES
+  const processedRecords = sortedRecords.map((record, index) => {
+    // If this is the newest record, everything in it is Active (or Pending)
+    if (index === 0) {
+      return {
+        ...record,
+        prescription: record.prescription.map(item => ({
+          ...item,
+          status: item.instructions === 'Lab Test' ? 'Pending' : 'Active'
+        }))
+      };
+    }
+
+    // For older records, check against the LATEST record (sortedRecords[0])
+    const latestRecord = sortedRecords[0];
+    
+    return {
+      ...record,
+      prescription: record.prescription.map(item => {
+        const isLabTest = item.instructions === 'Lab Test';
+        
+        // Does this item exist in the latest visit?
+        const existsInLatest = latestRecord.prescription.some(latestItem => latestItem.name === item.name);
+
+        let computedStatus;
+
+        if (isLabTest) {
+          // Lab Test: If NOT in latest, it was done in the past -> Tested. If it IS in latest -> Pending.
+          computedStatus = existsInLatest ? 'Pending' : 'Tested';
+        } else {
+          // Medicine: If NOT in latest, it was stopped -> Stop. If it IS in latest -> Active.
+          computedStatus = existsInLatest ? 'Active' : 'Stop';
+        }
+
+        return { ...item, status: computedStatus };
+      })
+    };
+  });
+
+  const [viewingRecord, setViewingRecord] = useState(processedRecords[0] || null);
 
   const sendToDoctor = (pt) => {
     dispatch(setActivePatient(pt.token));
@@ -31,7 +68,7 @@ export default function PatientHistory({ patientId, patientName, onClose }) {
             <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
               <FileText className="w-5 h-5 text-teal-600" /> Medical History - {patientName}
             </h3>
-            <p className="text-xs text-slate-500">Showing all {sortedRecords.length} visit records.</p>
+            <p className="text-xs text-slate-500">Showing all {processedRecords.length} visit records.</p>
           </div>
           <button onClick={onClose} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-2 transition-all">
             <X className="w-4 h-4" /> Close History
@@ -113,11 +150,12 @@ export default function PatientHistory({ patientId, patientName, onClose }) {
                 <h4 className="font-bold text-sm text-slate-800">Visit History</h4>
                 <p className="text-[11px] text-slate-500">Click a card to view details</p>
               </div>
-              <span className="bg-teal-100 text-teal-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">{sortedRecords.length} Records</span>
+              <span className="bg-teal-100 text-teal-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">{processedRecords.length} Records</span>
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
-              {sortedRecords.map(pt => (
+              {/* 🔥 MAP OVER PROCESSED RECORDS */}
+              {processedRecords.map(pt => (
                 <div key={`${pt.id}-${pt.date}-${pt.token}`} className={`p-3.5 bg-slate-50 border rounded-xl transition-all space-y-2.5 ${viewingRecord?.date === pt.date ? 'border-teal-500 ring-1 ring-teal-500' : 'border-slate-200 hover:border-teal-400'}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -146,7 +184,8 @@ export default function PatientHistory({ patientId, patientName, onClose }) {
 
 
       </div>
-      <PrescriptionTable sortedRecords={sortedRecords}/>
+      {/* 🔥 PASS PROCESSED RECORDS */}
+      <PrescriptionTable sortedRecords={processedRecords}/>
     </>
   );
 }

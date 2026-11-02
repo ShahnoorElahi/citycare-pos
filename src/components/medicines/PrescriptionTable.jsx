@@ -17,14 +17,12 @@ const getStatusBadge = (status) => {
   switch (status?.toLowerCase()) {
     case 'active':
       return 'bg-[#D1FAE5] text-[#059669] border border-[#A7F3D0]'; // Green
-    case 'completed':
-      return 'bg-gray-100 text-gray-600 border border-gray-200'; // Gray
+    case 'stop':
+      return 'bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]'; // Red
     case 'pending':
       return 'bg-[#FEF3C7] text-[#D97706] border border-[#FDE68A]'; // Amber
-    case 'dispensed':
+    case 'tested':
       return 'bg-[#DBEAFE] text-[#2563EB] border border-[#BFDBFE]'; // Blue
-    case 'cancelled':
-      return 'bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]'; // Red
     default:
       return 'bg-gray-100 text-gray-600 border border-gray-200';
   }
@@ -105,7 +103,7 @@ export default function PrescriptionView(prop) {
                     {patient.prescription.map((item, medIndex) => {
                       const form = getMedicineForm(item.medId, item.name);
                       const badgeColor = getFormBadgeColor(form);
-                      const status = item.status || "Active";
+                      const status = item.status || (isLabTest ? "Pending" : "Active");
                       const statusColor = getStatusBadge(status);
                       const isLabTest = item.instructions === 'Lab Test';
 

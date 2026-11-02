@@ -27,14 +27,34 @@ const initialState = {
 
   patientsQueue: [
     {
+      id: "CC-1", token: 1, name: "a", age: 1, gender: "Male", date: "2026-11-02",
+      bp: "120/80", sugar: "110", pulse: "72", weight: "70", height: "172", temp: "98.6",
+      notes: "Mild fever and body pain since 2 days.",
+      prescription: [
+        { id: 1712000001, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Active" },
+        { id: 1712000002, medId: 901, name: "Complete Blood Count (CBC)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Pending" }
+      ]
+    }, 
+    {
+      id: "CC-2", token: 2, name: "b", age: 2, gender: "Male", date: "2026-11-02",
+      bp: "120/80", sugar: "110", pulse: "72", weight: "70", height: "172", temp: "98.6",
+      notes: "Mild fever and body pain since 2 days.",
+      prescription: [
+        { id: 1712000001, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Active" },
+        { id: 1712000002, medId: 902, name: "Lipid Profile", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Pending" },
+        { id: 1712000003, medId: 5, name: "Cetirizine 10mg", freq: "0-0-1", duration: "5 Days", instructions: "At Bedtime", status: "Active" },
+        { id: 1712000004, medId: 903, name: "Liver Function Test (LFT)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Pending" }
+      ]
+    },
+    {
       id: "CC-9042", token: 101, name: "Rahul Sharma", age: 34, gender: "Male", date: "2026-10-25",
       bp: "120/80", sugar: 110, pulse: 72, weight: 70, height: 172, temp: 98.6,
       notes: "Mild fever and body pain since 2 days.",
       prescription: [
         { id: 1712000001, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Active" },
-        { id: 1712000002, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "3 Days", instructions: "With Food", status: "Pending" },
-        { id: 1712000003, medId: 5, name: "Cetirizine 10mg", freq: "0-0-1", duration: "5 Days", instructions: "At Bedtime", status: "Dispensed" },
-        { id: 1712000004, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Completed" }
+        { id: 1712000002, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "3 Days", instructions: "With Food", status: "Stop" },
+        { id: 1712000003, medId: 904, name: "Kidney Function Test (KFT)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Tested" },
+        { id: 1712000004, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Active" }
       ]
     },
     {
@@ -42,9 +62,9 @@ const initialState = {
       bp: "140/90", sugar: 160, pulse: 78, weight: 65, height: 158, temp: 98.4,
       notes: "Routine checkup for hypertension. Reports occasional dizziness.",
       prescription: [
-        { id: 1712000005, medId: 3, name: "Omeprazole 20mg", freq: "1-0-0", duration: "14 Days", instructions: "30 mins Before Breakfast", status: "Completed" },
-        { id: 1712000006, medId: 6, name: "Azithromycin 500mg", freq: "1-0-0", duration: "3 Days", instructions: "Before Meals", status: "Cancelled" },
-        { id: 1712000007, medId: 7, name: "Multivitamin Plus", freq: "0-1-0", duration: "30 Days", instructions: "After Lunch", status: "Active" }
+        { id: 1712000005, medId: 3, name: "Omeprazole 20mg", freq: "1-0-0", duration: "14 Days", instructions: "30 mins Before Breakfast", status: "Stop" },
+        { id: 1712000006, medId: 6, name: "Azithromycin 500mg", freq: "1-0-0", duration: "3 Days", instructions: "Before Meals", status: "Active" },
+        { id: 1712000007, medId: 905, name: "Thyroid Profile (T3, T4, TSH)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Tested" }
       ]
     },
     {
@@ -53,8 +73,8 @@ const initialState = {
       notes: "Dry cough and sore throat for a week. No difficulty breathing.",
       prescription: [
         { id: 1712000008, medId: 2, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "7 Days", instructions: "After Meals", status: "Active" },
-        { id: 1712000009, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "3 Days", instructions: "After Meals", status: "Dispensed" },
-        { id: 1712000010, medId: 5, name: "Cetirizine 10mg", freq: "0-0-1", duration: "5 Days", instructions: "At Bedtime", status: "Completed" }
+        { id: 1712000009, medId: 906, name: "Urine Routine & Microscopy", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Pending" },
+        { id: 1712000010, medId: 5, name: "Cetirizine 10mg", freq: "0-0-1", duration: "5 Days", instructions: "At Bedtime", status: "Active" }
       ]
     },
     {
@@ -62,9 +82,9 @@ const initialState = {
       bp: "130/82", sugar: 210, pulse: 74, weight: 58, height: 152, temp: 98.2,
       notes: "Elevated fasting blood sugar. Needs adjustments to diabetes management.",
       prescription: [
-        { id: 1712000011, medId: 7, name: "Multivitamin Plus", freq: "0-1-0", duration: "30 Days", instructions: "After Lunch", status: "Active" },
-        { id: 1712000012, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Pending" },
-        { id: 1712000013, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "3 Days", instructions: "With Food", status: "Cancelled" }
+        { id: 1712000011, medId: 907, name: "Chest X-Ray (PA View)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Tested" },
+        { id: 1712000012, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Active" },
+        { id: 1712000013, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "3 Days", instructions: "With Food", status: "Stop" }
       ]
     },
     {
@@ -74,8 +94,8 @@ const initialState = {
       prescription: [
         { id: 1712000014, medId: 2, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "7 Days", instructions: "After Meals", status: "Active" },
         { id: 1712000015, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Active" },
-        { id: 1712000016, medId: 3, name: "Omeprazole 20mg", freq: "1-0-0", duration: "5 Days", instructions: "Before Breakfast", status: "Dispensed" },
-        { id: 1712000017, medId: 6, name: "Azithromycin 500mg", freq: "1-0-0", duration: "3 Days", instructions: "Before Meals", status: "Completed" }
+        { id: 1712000016, medId: 908, name: "ECG / EKG", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Tested" },
+        { id: 1712000017, medId: 6, name: "Azithromycin 500mg", freq: "1-0-0", duration: "3 Days", instructions: "Before Meals", status: "Stop" }
       ]
     },
     {
@@ -83,9 +103,9 @@ const initialState = {
       bp: "135/85", sugar: 120, pulse: 76, weight: 75, height: 170, temp: 98.5,
       notes: "Persistent joint pain in knees.",
       prescription: [
-        { id: 1712000018, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Pending" },
-        { id: 1712000019, medId: 7, name: "Multivitamin Plus", freq: "0-1-0", duration: "30 Days", instructions: "After Lunch", status: "Active" },
-        { id: 1712000020, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Completed" }
+        { id: 1712000018, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Active" },
+        { id: 1712000019, medId: 909, name: "HbA1c (Glycated Hemoglobin)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Pending" },
+        { id: 1712000020, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Active" }
       ]
     },
     {
@@ -94,7 +114,7 @@ const initialState = {
       notes: "Seasonal allergies and skin rash.",
       prescription: [
         { id: 1712000021, medId: 5, name: "Cetirizine 10mg", freq: "0-0-1", duration: "10 Days", instructions: "At Bedtime", status: "Active" },
-        { id: 1712000022, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "3 Days", instructions: "After Meals", status: "Dispensed" },
+        { id: 1712000022, medId: 901, name: "Complete Blood Count (CBC)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Tested" },
         { id: 1712000023, medId: 2, name: "Amoxicillin 250mg", freq: "1-1-1", duration: "5 Days", instructions: "After Meals", status: "Active" }
       ]
     },
@@ -104,9 +124,9 @@ const initialState = {
       notes: "Follow-up for diabetes and hypertension.",
       prescription: [
         { id: 1712000024, medId: 3, name: "Omeprazole 20mg", freq: "1-0-0", duration: "14 Days", instructions: "Before Breakfast", status: "Active" },
-        { id: 1712000025, medId: 7, name: "Multivitamin Plus", freq: "0-1-0", duration: "30 Days", instructions: "After Lunch", status: "Pending" },
-        { id: 1712000026, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Cancelled" },
-        { id: 1712000027, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "3 Days", instructions: "With Food", status: "Completed" }
+        { id: 1712000025, medId: 902, name: "Lipid Profile", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Tested" },
+        { id: 1712000026, medId: 8, name: "Pantoprazole 40mg", freq: "1-0-0", duration: "10 Days", instructions: "Empty Stomach", status: "Stop" },
+        { id: 1712000027, medId: 4, name: "Ibuprofen 400mg", freq: "1-0-1", duration: "3 Days", instructions: "With Food", status: "Stop" }
       ]
     }
   ],
@@ -129,7 +149,15 @@ const clinicSlice = createSlice({
     setActivePatient: (state, action) => { state.activePatientId = action.payload; },
     addToSlip: (state, action) => {
       const pt = state.patientsQueue.find(p => p.token === state.activePatientId);
-      if (pt && !pt.prescription.some(i => i.medId === action.payload.medId)) pt.prescription.push(action.payload);
+      if (pt && !pt.prescription.some(i => i.medId === action.payload.medId)) {
+        // 🔥 Set default statuses
+        const isLabTest = action.payload.instructions === 'Lab Test';
+        const newItem = {
+          ...action.payload,
+          status: isLabTest ? 'Pending' : 'Active'
+        };
+        pt.prescription.push(newItem);
+      }
     },
     removeFromSlip: (state, action) => {
       const pt = state.patientsQueue.find(p => p.token === state.activePatientId);
