@@ -4,7 +4,7 @@ import { completeVisit } from '../store/clinicSlice';
 
 export default function Header({ activeTab, toggleSidebar }) {
   const dispatch = useDispatch();
-  const activePatient = useSelector(state => state.clinic.patientsQueue.find(p => p.id === state.clinic.activePatientId));
+  const activePatient = useSelector(state => state.clinic.patientsQueue.find(p => p.token === state.clinic.activePatientId));
   const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   const handlePrint = () => {

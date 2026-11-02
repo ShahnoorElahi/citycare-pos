@@ -7,7 +7,7 @@ import PrintModal from './modals/PrintModal'; // Ensure you create this!
 
 export default function Modals() {
   const { activePatientId, patientsQueue } = useSelector(state => state.clinic);
-  const activePatient = patientsQueue.find(p => p.id === activePatientId);
+  const activePatient = patientsQueue.find(p => p.token === activePatientId);
   
   const [toasts, setToasts] = useState([]);
   

@@ -17,8 +17,8 @@ export default function PatientHistory({ patientId, patientName, onClose }) {
 
   const [viewingRecord, setViewingRecord] = useState(sortedRecords[0] || null);
 
-  const sendToDoctor = (id) => {
-    dispatch(setActivePatient(id));
+  const sendToDoctor = (pt) => {
+    dispatch(setActivePatient(pt.token));
     window.dispatchEvent(new CustomEvent('switchTab', { detail: 'rx-pos' }));
   };
 
@@ -133,7 +133,7 @@ export default function PatientHistory({ patientId, patientName, onClose }) {
                       <button onClick={() => setViewingRecord(pt)} className="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-2 py-1 rounded-lg text-[10px] transition-all flex items-center gap-1">
                         <Eye className="w-3 h-3" /> View
                       </button>
-                      <button onClick={() => sendToDoctor(pt.id)} className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] transition-all">
+                      <button onClick={() => sendToDoctor(pt)} className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] transition-all">
                         Doctor Rx
                       </button>
                     </div>

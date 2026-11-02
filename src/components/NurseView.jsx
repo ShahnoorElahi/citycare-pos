@@ -93,8 +93,8 @@ export default function NurseView() {
 
   // 🔥 MARK AS SENT TO DOCTOR (instead of remove)
   const sendToDoctor = (patient) => {
-    dispatch(markAsSentToDoctor(patient.id));
-    dispatch(setActivePatient(patient.id));
+    dispatch(markAsSentToDoctor(patient.id)); 
+    dispatch(setActivePatient(patient.token)); // 🔥 pass TOKEN instead of ID
     
     window.dispatchEvent(new CustomEvent('switchTab', { detail: 'rx-pos' }));
     window.dispatchEvent(new CustomEvent('showToast', { 

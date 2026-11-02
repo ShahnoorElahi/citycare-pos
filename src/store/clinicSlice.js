@@ -128,22 +128,22 @@ const clinicSlice = createSlice({
     },
     setActivePatient: (state, action) => { state.activePatientId = action.payload; },
     addToSlip: (state, action) => {
-      const pt = state.patientsQueue.find(p => p.id === state.activePatientId);
+      const pt = state.patientsQueue.find(p => p.token === state.activePatientId);
       if (pt && !pt.prescription.some(i => i.medId === action.payload.medId)) pt.prescription.push(action.payload);
     },
     removeFromSlip: (state, action) => {
-      const pt = state.patientsQueue.find(p => p.id === state.activePatientId);
+      const pt = state.patientsQueue.find(p => p.token === state.activePatientId);
       if (pt) pt.prescription = pt.prescription.filter(i => i.id !== action.payload);
     },
     updateSlipItem: (state, action) => {
-      const pt = state.patientsQueue.find(p => p.id === state.activePatientId);
+      const pt = state.patientsQueue.find(p => p.token === state.activePatientId);
       if (pt) {
         const item = pt.prescription.find(i => i.id === action.payload.id);
         if (item) item[action.payload.field] = action.payload.value;
       }
     },
     clearPrescription: (state) => {
-      const pt = state.patientsQueue.find(p => p.id === state.activePatientId);
+      const pt = state.patientsQueue.find(p => p.token === state.activePatientId);
       if (pt) pt.prescription = [];
     },
 
@@ -237,7 +237,7 @@ const clinicSlice = createSlice({
     completeVisit: (state) => {
       const todayStr = new Date().toISOString().split('T')[0];
       const pt = state.patientsQueue.find(
-        p => p.id === state.activePatientId && p.date === todayStr
+        p => p.token === state.activePatientId && p.date === todayStr
       );
       if (pt) pt.status = 'with-doctor';
       // move to next active queued patient so activePatient isn't stale

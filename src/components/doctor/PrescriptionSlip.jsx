@@ -7,27 +7,23 @@ import ActivePatientCard from './ActivePatientCard';
 export default function PrescriptionSlip() {
   const dispatch = useDispatch();
   const { patientsQueue, activePatientId } = useSelector(state => state.clinic);
-  
+
   const todayStr = new Date().toISOString().split('T')[0];
 
-  // Get today's active patients only
-  const todayActivePatients = patientsQueue.filter(pt => 
-    pt.date === todayStr && 
-    pt.status !== 'with-doctor' && 
+  const todayActivePatients = patientsQueue.filter(pt =>
+    pt.date === todayStr &&
+    pt.status !== 'with-doctor' &&
     pt.status !== 'completed'
   );
 
-  // 🔥 AUTO SELECT IF ONLY ONE PATIENT
   useEffect(() => {
     if (!activePatientId && todayActivePatients.length > 0) {
-      dispatch(setActivePatient(todayActivePatients[0].id));
+      dispatch(setActivePatient(todayActivePatients[0].token)); // 🔥 .token
     }
   }, [activePatientId, todayActivePatients, dispatch]);
 
-  // Find the exact active patient
-  const activePatient = patientsQueue
-    .filter(p => p.id === activePatientId)
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  // 🔥 Find by token
+  const activePatient = patientsQueue.find(p => p.token === activePatientId);
 
   return (
     <section className="w-full lg:w-[58%] bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col overflow-hidden shrink-0">
@@ -38,16 +34,14 @@ export default function PrescriptionSlip() {
         </div>
         <select
           value={activePatientId ?? ''}
-          onChange={e => dispatch(setActivePatient(e.target.value))}
+          onChange={e => dispatch(setActivePatient(Number(e.target.value)))} // 🔥 cast to Number
           className="bg-slate-800 text-teal-300 font-bold text-xs p-1.5 rounded-lg border border-slate-700 focus:outline-none max-w-[200px]"
         >
-          {/* 🔥 PLACEHOLDER IF NONE SELECTED */}
           {!activePatientId && (
             <option value="" disabled>Select a patient...</option>
           )}
-          
           {todayActivePatients.map(pt => (
-            <option key={`${pt.id}-${pt.token}`} value={pt.id}>
+            <option key={pt.token} value={pt.token}> {/* 🔥 key & value = token */}
               Token #{pt.token} - {pt.name}
             </option>
           ))}
@@ -59,9 +53,9 @@ export default function PrescriptionSlip() {
         <ActivePatientCard patient={activePatient} />
       ) : (
         <div className="p-10 flex flex-col items-center justify-center text-slate-400 space-y-2 border-b border-slate-200">
-           <Users className="w-8 h-8 stroke-1" />
-           <p className="text-sm font-semibold">No patient selected</p>
-           <p className="text-xs">Select a patient from the dropdown above.</p>
+          <Users className="w-8 h-8 stroke-1" />
+          <p className="text-sm font-semibold">No patient selected</p>
+          <p className="text-xs">Select a patient from the dropdown above.</p>
         </div>
       )}
 

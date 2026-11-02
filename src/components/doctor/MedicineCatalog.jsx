@@ -6,7 +6,7 @@ import { addToSlip } from '../../store/clinicSlice';
 export default function MedicineCatalog() {
   const dispatch = useDispatch();
   const { medicines, patientsQueue, activePatientId } = useSelector(state => state.clinic);
-  const activePatient = patientsQueue.find(p => p.id === activePatientId);
+  const activePatient = patientsQueue.find(p => p.token === activePatientId);
 
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
