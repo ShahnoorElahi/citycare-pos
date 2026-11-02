@@ -146,7 +146,7 @@ export default function PatientHistory({ patientId, patientName, onClose }) {
 
 
       </div>
-      <PrescriptionTable/>
+      <PrescriptionTable sortedRecords={sortedRecords}/>
     </>
   );
 }

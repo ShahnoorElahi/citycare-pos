@@ -1,7 +1,9 @@
 import { Calendar, PlusCircle, Printer, CheckCircle2, Menu } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { completeVisit } from '../store/clinicSlice';
 
 export default function Header({ activeTab, toggleSidebar }) {
+  const dispatch = useDispatch();
   const activePatient = useSelector(state => state.clinic.patientsQueue.find(p => p.id === state.clinic.activePatientId));
   const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -13,12 +15,17 @@ export default function Header({ activeTab, toggleSidebar }) {
     window.dispatchEvent(new CustomEvent('openPrintModal'));
   };
 
+
+  // remove markAsSentToDoctor import
+
   const handleComplete = () => {
     if (!activePatient || activePatient.prescription.length === 0) {
       window.dispatchEvent(new CustomEvent('showToast', { detail: { message: 'Add medications before completing visit', type: 'info' } }));
       return;
     }
-    window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Completed consultation for Token #${activePatient.token} (${activePatient.name})`, type: 'success' } }));
+    const { token, name } = activePatient;
+    dispatch(completeVisit());
+    window.dispatchEvent(new CustomEvent('showToast', { detail: { message: `Completed consultation for Token #${token} (${name})`, type: 'success' } }));
   };
 
   const titles = {

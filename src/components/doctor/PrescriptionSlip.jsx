@@ -20,7 +20,9 @@ export default function PrescriptionSlip() {
           onChange={e => dispatch(setActivePatient(e.target.value))}
           className="bg-slate-800 text-teal-300 font-bold text-xs p-1.5 rounded-lg border border-slate-700 focus:outline-none max-w-[200px]"
         >
-          {patientsQueue.map(pt => <option key={pt.id} value={pt.id}>Token #{pt.token} - {pt.name}</option>)}
+          {patientsQueue
+            .filter(pt => pt.status !== 'with-doctor' && pt.status !== 'completed')
+            .map(pt => <option key={pt.id} value={pt.id}>Token #{pt.token} - {pt.name}</option>)}
         </select>
       </div>
 
