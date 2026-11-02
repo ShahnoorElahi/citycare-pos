@@ -203,7 +203,6 @@ const clinicSlice = createSlice({
 
         if (alreadyExistsToday) {
           const existing = state.patientsQueue.find(p => p.id === oldPatient.id && p.date === todayStr);
-          state.activePatientId = existing.id;
           return;
         }
 
@@ -221,7 +220,6 @@ const clinicSlice = createSlice({
 
         console.log("✅ Creating new visit:", newVisit);
         state.patientsQueue.unshift(newVisit);
-        state.activePatientId = newVisit.id;
       } else {
         console.log("❌ No old patient found with ID:", action.payload);
       }
