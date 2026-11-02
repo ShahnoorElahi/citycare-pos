@@ -110,7 +110,7 @@ const initialState = {
       ]
     }
   ],
-  activePatientId: 'CC-9042',
+  activePatientId: null,
 };
 
 const clinicSlice = createSlice({
@@ -124,7 +124,6 @@ const clinicSlice = createSlice({
         if (pt) Object.assign(pt, data);
       } else {
         state.patientsQueue.unshift({ ...data, prescription: [] });
-        state.activePatientId = data.id;
       }
     },
     setActivePatient: (state, action) => { state.activePatientId = action.payload; },

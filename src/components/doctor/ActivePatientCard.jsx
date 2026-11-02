@@ -1,10 +1,15 @@
 import { useSelector } from 'react-redux';
 
-export default function ActivePatientCard() {
+export default function ActivePatientCard({ patient }) {
   const { patientsQueue, activePatientId } = useSelector(state => state.clinic);
-  const activePatient = patientsQueue.find(p => p.id === activePatientId);
+  
+  // Use passed prop, or find by activePatientId as fallback
+  const activePatient = patient || patientsQueue
+    .filter(p => p.id === activePatientId)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 
   if (!activePatient) return null;
+
 
   return (
     <div className="p-4 bg-slate-950 text-white space-y-3">
