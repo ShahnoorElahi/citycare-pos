@@ -27,16 +27,16 @@ const initialState = {
 
   patientsQueue: [
     {
-      id: "CC-1", token: 1, name: "a", age: 1, gender: "Male", date: "2026-11-02",
+      id: "CC-1", token: 1, name: "a", age: 1, gender: "Male", date: "2026-11-08",
       bp: "120/80", sugar: "110", pulse: "72", weight: "70", height: "172", temp: "98.6",
       notes: "Mild fever and body pain since 2 days.",
       prescription: [
         { id: 1712000001, medId: 1, name: "Paracetamol 500mg", freq: "1-0-1", duration: "5 Days", instructions: "After Meals", status: "Active" },
         { id: 1712000002, medId: 901, name: "Complete Blood Count (CBC)", freq: "Once", duration: "1 Day", instructions: "Lab Test", status: "Pending" }
       ]
-    }, 
+    },
     {
-      id: "CC-2", token: 2, name: "b", age: 2, gender: "Male", date: "2026-11-02",
+      id: "CC-2", token: 2, name: "b", age: 2, gender: "Male", date: "2026-11-08",
       bp: "120/80", sugar: "110", pulse: "72", weight: "70", height: "172", temp: "98.6",
       notes: "Mild fever and body pain since 2 days.",
       prescription: [
@@ -268,11 +268,12 @@ const clinicSlice = createSlice({
         p => p.token === state.activePatientId && p.date === todayStr
       );
       if (pt) pt.status = 'with-doctor';
-      // move to next active queued patient so activePatient isn't stale
+
       const next = state.patientsQueue.find(
         p => p.date === todayStr && p.status !== 'with-doctor'
       );
-      state.activePatientId = next ? next.id : null;
+      // 🔥 FIX: use next.token, not next.id
+      state.activePatientId = next ? next.token : null;
     },
   },
 });
