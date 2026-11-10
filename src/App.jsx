@@ -10,8 +10,8 @@ import LabTestsCatalog from './components/LabTestsCatalog';
 import PatientArchives from './components/PatientArchives';
 import Modals from './components/Modals';
 import PrescriptionTable from './components/medicines/PrescriptionTable';
-import BloodPressureGraph from './components/doctor/BloodPressureGraph';
-import RecoveryRateGraph from './components/doctor/RecoveryRateGraph';
+import BloodPressureGraph from './components/doctor/graph/BloodPressureGraph';
+import RecoveryRateGraph from './components/doctor/graph/RecoveryRateGraph';
 import PatientOutcomesGraph from './components/doctor/graph/PatientOutcomesGraph'
 
 function MainApp() {
