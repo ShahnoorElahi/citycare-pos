@@ -13,6 +13,7 @@ import PrescriptionTable from './components/medicines/PrescriptionTable';
 import BloodPressureGraph from './components/doctor/graph/BloodPressureGraph';
 import RecoveryRateGraph from './components/doctor/graph/RecoveryRateGraph';
 import PatientOutcomesGraph from './components/doctor/graph/PatientOutcomesGraph'
+import DoseFrequencyGraph from './components/doctor/graph/DoseFrequencyGraph'
 
 function MainApp() {
   const [activeTab, setActiveTab] = useState('rx-pos');
@@ -58,7 +59,8 @@ function MainApp() {
 
           {/* 🔥 FIXED: Added h-full here so the inner panels stretch */}
           <main id="view-rx-pos" className={`${activeTab !== 'rx-pos' ? 'hidden' : ''} flex-1 flex lg:flex-row flex-col p-4 gap-4 h-full overflow-hidden`}>
-            <PatientOutcomesGraph/>
+            <DoseFrequencyGraph/>
+            {/* <PatientOutcomesGraph/> */}
             {/* <RecoveryRateGraph /> */}
             {/* <BloodPressureGraph/> */}
             {/* <DoctorView /> */}
